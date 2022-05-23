@@ -1,9 +1,9 @@
 import socket
 import argparse
 from random import randint
-from html import unescape
 import urllib.parse
 import re
+from os.path import exists
 
 def getRandomUserAgent():
     user_agents = ["Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:38.0) Gecko/20100101 Firefox/38.0",
@@ -185,7 +185,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
     response = recvall(sock)
     # print(response.decode())
     _wpnonce = get_wpnonce(response)
-    print(f'[INFORM] _wpnonce value: {_wpnonce}')
+    if log == 'on':
+        print(f'[INFORM] _wpnonce value: {_wpnonce}')
 
 # Upload image using post method
 
@@ -194,6 +195,15 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
     if log == 'on':
         print(f'[LOG]    Reconnecting to {server_address[0]}...')
     sock.connect(server_address)
+
+    if not exists(localfile):
+        if log == 'on':
+            print('[LOG]    File không tồn tại.')
+            print('[LOG]    Upload failed.')
+            exit(1)
+        else:
+            print('Upload failed.')
+            exit(1)
 
     # load image in localfile path
     with open(localfile, 'rb') as f:

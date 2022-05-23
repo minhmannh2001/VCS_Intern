@@ -1,7 +1,6 @@
 import socket
 import argparse
 from random import randint
-from html import unescape
 import urllib.parse
 
 def getRandomUserAgent():
